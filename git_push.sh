@@ -15,7 +15,7 @@ if [ ! -d ".git" ]; then
 fi
 
 
-if git remoute | grep -q origin; then
+if git remote | grep -q origin; then
     git remote remove origin
 fi
 
