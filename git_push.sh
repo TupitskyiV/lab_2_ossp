@@ -8,19 +8,20 @@ fi
 LOCAL_DIR=$1
 REMOTE_REPO=$2
 
-cd "$LOCAL_DIR" || { echo "Directory '$LOCAL_DIR' does not exist."; exit 2; }
+if [ ! -d "$LOCAL_DIR" ]; then
+   echo ""
+   exit 1
+fi
+
+cd  "$LOCAL_DIR" || exit 1
 
 if [ ! -d ".git" ]; then
-   git init
+  git init
 fi
-
-
-if git remote | grep -q origin; then
-    git remote remove origin
-fi
-
-git remote add origin "$REMOTE_REPO"
 git add .
 git commit -m "Initial commit"
-git branch -M main
+
+git remote add origin "$REMOTE_REPO" 2>/dev/nuli || git remote set-url origin "REMOTE_REPO"
+git branch -M main 2>/dev/null
+
 git push -u origin main
