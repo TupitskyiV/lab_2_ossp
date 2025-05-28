@@ -41,13 +41,19 @@ if [ ! -d ".git" ]; then
  git branch -M main
 
 
- echo "Synchronizing with remote..."
- git pull origin main --allow-unrelated-histories || echo "Warning: Sync issues detected"
+ echo "Pulling changes from GitHub..."
+ if ! git pull origin main --allow-unrelated-histories; then
+      echo "Error: Pull failed - resolve conflicts manually."
+      exit 1
+ fi
 
  git add .
  git commit -m "Merged remote changes" || echo  "No changes to commit after merge"
 
- echo "Pushing changes to GitHub..."
- git push origin main 
-
- echo "Success! Code uploaded to GitHub"
+ echo "Pushing to GitHub..."
+ if git push origin main; then 
+     echo "Success! Code uploaded to GitHub"
+ else
+     echo "Error: Push failed. Try to pull again or resolve conflicts"
+     exit 1
+ fi
