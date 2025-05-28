@@ -3,34 +3,51 @@
 
 
  if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 /local/folder/path git@github.com:TupitskyiV/repo.git"
+    echo "Error: Invalid number of arguments..."
+    echo "Uses: $0 /home/student/SysProg/LabWork_1 git@github.com:TupitskyiV/lab_2_ossp.git"
     exit 1
  fi
-
 
  LOCAL_DIR="$1"
  REMOTE_REPO="$2"
 
-
  if [ ! -d "$LOCAL_DIR" ]; then
-    echo "Local directory does not exist."
+    echo "Error: Directory does not exist: '$LOCAL_DIR'"
     exit 1
  fi
 
 
- cd  "$LOCAL_DIR" || exit 1
+ if ! cd "$LOCAL_DIR"; then
+     echo "Error: Cannot access directory"
+     exit 1
+ fi
 
 
- if [ ! -d ".git" ]; then
-   git init
+if [ ! -d ".git" ]; then
+    echo "Initializing Git repository '$LOCAL_DIR'"
+    git init
  fi
 
 
  git add .
- git commit -m "Initial commit"
+ git commit -m "Initial commit" || echo "Nothing commit"
 
 
- git remote add origin "$REMOTE_REPO" 2>/dev/nuli || git remote set-url origin "$REMOTE_REPO"
- git branch -M main 
- git pull origin main --allow-unrelated-histories
- git push -u origin main
+ echo "Configuring remote repository..." 
+ git remote add origin "$REMOTE_REPO" 2>/dev/null || git remote set-url origin "$REMOTE_REPO"
+
+
+ echo "Setting main branch..."
+ git branch -M main
+
+
+ echo "Synchronizing with remote..."
+ git pull origin main --allow-unrelated-histories || echo "Warning: Sync issues detected"
+
+ git add .
+ git commit -m "Merged remote changes" || echo  "No changes to commit after merge"
+
+ echo "Pushing changes to GitHub..."
+ git push origin main 
+
+ echo "Success! Code uploaded to GitHub"
