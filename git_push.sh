@@ -42,7 +42,7 @@ if [ ! -d ".git" ]; then
 
 
  echo "Pulling changes from GitHub..."
- if ! git pull origin main --allow-unrelated-histories -X theirs --no-endit; then
+ if ! git pull origin main --allow-unrelated-histories -X theirs --no-edit; then
       echo "Error: Pull failed - resolve conflicts manually."
       exit 1
  fi
