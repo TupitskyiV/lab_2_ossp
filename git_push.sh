@@ -2,7 +2,7 @@
  #!/bin/bash
 
 
- if ["$#" -ne 2 ]; then
+ if [ "$#" -ne 2 ]; then
     echo "Usage: $0 /local/folder/path git@github.com:TupitskyiV/repo.git"
     exit 1
  fi
